@@ -1,0 +1,102 @@
+/* src/components/sidebar.css */
+
+.sidebar {
+  width: 30%;
+  height: 100vh;
+  background-color: #ffffff;
+  border-right: 1px solid #ddd;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.sidebar-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.user-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-item {
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.user-item:hover {
+  background-color: #f0f0f0;
+}
+
+.loading,
+.error,
+.empty {
+  padding: 10px;
+  color: #666;
+  font-size: 14px;
+}
+.sidebar {
+  background-color: #f5f5f5;
+  color: #000;
+}
+
+.dark .sidebar {
+  background-color: #2a2a2a;
+  color: #eaeaea;
+}
+
+/* Sidebar dark mode styles */
+.sidebar.dark {
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+.sidebar .search-input {
+  margin: 10px 0;
+}
+
+/* Header container with toggle button */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.theme-toggle-btn {
+  padding: 4px 8px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #eee;
+  transition: background-color 0.3s ease;
+  margin-left: auto;
+}
+
+.theme-toggle-btn.dark {
+  background-color: #333;
+  color: #fff;
+}
+
+.theme-toggle-btn:hover {
+  background-color: #ccc;
+}
+
+.theme-toggle-btn.dark:hover {
+  background-color: #555;
+}

@@ -1,0 +1,36 @@
+/* src/components/SidebarTopButtons.css */
+.top-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+}
+.icon-btn {
+  padding: 6px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+.icon-btn.light {
+  background-color: #ddd;
+  color: #333;
+}
+.icon-btn.light:hover {
+  background-color: #ccc;
+}
+.icon-btn.dark {
+  background-color: #444;
+  color: #fff;
+}
+.icon-btn.dark:hover {
+  background-color: #555;
+}

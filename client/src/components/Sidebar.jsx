@@ -1,19 +1,13 @@
 // src/components/Sidebar.jsx
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  CircularProgress,
-  Divider,
-} from "@mui/material";
 import axios from "axios";
+import "./sidebar.css";
+import { useNavigate } from "react-router-dom";
+import SidebarTopButtons from "./SidebarTopButtons";
 
-const Sidebar = ({ onSelectUser }) => {
+const Sidebar = ({ onSelectUser, darkMode, setDarkMode }) => {
   const [users, setUsers] = useState([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -23,11 +17,15 @@ const Sidebar = ({ onSelectUser }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/users", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const otherUsers = res.data.users.filter((u) => u._id !== loggedInUserId);
+        const res = await axios.get(
+          "https://mern-chat-app-a1xe.onrender.com/api/users",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const otherUsers = res.data.users.filter(
+          (u) => u._id !== loggedInUserId
+        );
         setUsers(otherUsers);
       } catch (err) {
         console.error(err);
@@ -36,43 +34,58 @@ const Sidebar = ({ onSelectUser }) => {
         setLoading(false);
       }
     };
-
     fetchUsers();
   }, []);
 
+  const filteredUsers = users.filter((u) =>
+    u.username.toLowerCase().includes(search.toLowerCase())
+  );
+  const navigate = useNavigate();
+
+const handleLogout = () => {
+  // Clear localStorage or auth cookies if needed
+  localStorage.removeItem("token"); // if you're storing JWT
+  navigate("/login");
+};
+
   return (
-    <Box
-      sx={{
-        width: 280,
-        bgcolor: "#f5f5f5",
-        borderRight: "1px solid #ddd",
-        height: "100vh",
-        p: 2,
-      }}
-    >
-      <Typography variant="h5" gutterBottom fontWeight="bold">
-        Users
-      </Typography>
-      <Divider sx={{ mb: 2 }} />
+    <div className={`sidebar ${darkMode ? "dark" : ""}`}>
+      <div className="sidebar-header">
+        <h2 className="sidebar-title">Friends</h2>
+        
+        <SidebarTopButtons darkMode={darkMode} setDarkMode={setDarkMode} />
+
+
+      </div>
+
+      <input
+        type="text"
+        className="search-input"
+        placeholder="Search a friend by name ..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
 
       {loading ? (
-        <CircularProgress />
+        <div className="loading">Loading...</div>
       ) : error ? (
-        <Typography color="error">{error}</Typography>
-      ) : users.length === 0 ? (
-        <Typography>No users found</Typography>
+        <div className="error">{error}</div>
+      ) : filteredUsers.length === 0 ? (
+        <div className="empty">No users found</div>
       ) : (
-        <List>
-          {users.map((user) => (
-            <ListItem disablePadding key={user._id}>
-              <ListItemButton onClick={() => onSelectUser(user)}>
-                <ListItemText primary={user.username} />
-              </ListItemButton>
-            </ListItem>
+        <ul className="user-list">
+          {filteredUsers.map((user) => (
+            <li
+              key={user._id}
+              className="user-item"
+              onClick={() => onSelectUser(user)}
+            >
+              {user.username}
+            </li>
           ))}
-        </List>
+        </ul>
       )}
-    </Box>
+    </div>
   );
 };
 

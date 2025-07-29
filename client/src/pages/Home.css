@@ -1,0 +1,108 @@
+.home-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to right, #1e1e2f, #232344);
+  color: #fff;
+  padding: 20px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.animation-wrapper {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-bottom: 30px;
+}
+
+.person {
+  width: 80px;
+  height: 120px;
+  background-color: #00d1ff;
+  border-radius: 20px;
+  position: absolute;
+  bottom: 0;
+  animation: walk-in 3s forwards;
+}
+
+.person.left {
+  left: -100px;
+  animation-name: walk-in-left;
+}
+
+.person.right {
+  right: -100px;
+  background-color: #ff6b6b;
+  animation-name: walk-in-right;
+}
+
+.chat-icon {
+  font-size: 60px;
+  color: #f1c40f;
+  position: absolute;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  animation: pulse 2s infinite;
+}
+
+@keyframes walk-in-left {
+  0% {
+    left: -100px;
+  }
+  70% {
+    left: calc(50% - 120px);
+  }
+  100% {
+    left: calc(50% - 120px);
+    transform: rotate(-15deg);
+  }
+}
+
+@keyframes walk-in-right {
+  0% {
+    right: -100px;
+  }
+  70% {
+    right: calc(50% - 120px);
+  }
+  100% {
+    right: calc(50% - 120px);
+    transform: rotate(15deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.1);
+  }
+}
+
+.tagline {
+  font-size: 1.8rem;
+  margin: 20px 0;
+  font-weight: 500;
+  color: #ffffffcc;
+}
+
+.home-buttons button {
+  margin: 10px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 25px;
+  background: #3498db;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.home-buttons button:hover {
+  background: #2980b9;
+}

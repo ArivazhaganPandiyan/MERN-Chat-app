@@ -1,22 +1,17 @@
-// src/components/ChatBox.jsx
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Box,
-  Typography,
-  TextField,
-  IconButton,
-  Paper,
-  Stack,
-} from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
 import socket from "../socket";
+import { BsEmojiSmile } from "react-icons/bs";
+import EmojiPicker from "emoji-picker-react";
+import "./chatbox.css";
 
-const ChatBox = ({ selectedUser }) => {
+const ChatBox = ({ selectedUser, darkMode }) => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
-  const messagesEndRef = useRef(null);
+  const [showEmoji, setShowEmoji] = useState(false);
 
+  const messagesEndRef = useRef(null);
+  const emojiPickerRef = useRef(null);
   const token = localStorage.getItem("token");
   const currentUserId = JSON.parse(atob(token.split(".")[1])).id;
 
@@ -25,20 +20,33 @@ const ChatBox = ({ selectedUser }) => {
   };
 
   useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(e.target) &&
+        !e.target.closest(".emoji-toggle")
+      ) {
+        setShowEmoji(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
     if (!selectedUser) return;
 
     const fetchMessages = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/messages/${selectedUser._id}`,
+          `https://mern-chat-app-a1xe.onrender.com/api/messages/${selectedUser._id}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
         setMessages(res.data.messages);
         scrollToBottom();
+        setShowEmoji(false);
       } catch (err) {
         console.error(err);
       }
@@ -73,7 +81,7 @@ const ChatBox = ({ selectedUser }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/messages",
+        "https://mern-chat-app-a1xe.onrender.com/api/messages",
         newMsg,
         {
           headers: {
@@ -94,77 +102,72 @@ const ChatBox = ({ selectedUser }) => {
 
       setMessages((prev) => [...prev, savedMsg]);
       setText("");
+      setShowEmoji(false);
       scrollToBottom();
     } catch (err) {
       console.error("Message not sent", err);
     }
   };
 
+  const handleEmojiClick = (emojiData) => {
+    setText((prev) => prev + emojiData.emoji);
+  };
+
   return (
-    <Box sx={{ flex: 1, display: "flex", flexDirection: "column", p: 2 }}>
-      <Typography variant="h6" fontWeight="bold" mb={2}>
-        Chat with {selectedUser?.username || "..."}
-      </Typography>
+    <div className={`chatbox ${darkMode ? "dark" : ""}`}>
+      <div className="chatbox-header">
+        Chat with <strong>{selectedUser?.username || "..."}</strong>
+      </div>
 
-      <Box
-        sx={{
-          flex: 1,
-          overflowY: "auto",
-          p: 2,
-          mb: 2,
-          bgcolor: "#f9f9f9",
-          borderRadius: 2,
-          border: "1px solid #ddd",
-        }}
-      >
-        {messages.map((msg, idx) => (
-          <Box
-            key={idx}
-            sx={{
-              textAlign: msg.sender === currentUserId ? "right" : "left",
-              mb: 1.5,
-            }}
-          >
-            <Paper
-              sx={{
-                display: "inline-block",
-                p: 1.2,
-                px: 2,
-                bgcolor: msg.sender === currentUserId ? "#d2f8d2" : "#ffffff",
-                borderRadius: 2,
-                maxWidth: "75%",
-              }}
-              elevation={2}
+      <div className="chatbox-body">
+        {messages.map((msg, idx) => {
+          const isSender = msg.sender === currentUserId;
+          return (
+            <div
+              key={idx}
+              className={`message-row ${isSender ? "sent" : "received"}`}
             >
-              <Typography variant="body1">{msg.text}</Typography>
-              <Typography
-                variant="caption"
-                sx={{ display: "block", color: "#888", mt: 0.5 }}
-              >
-                {new Date(msg.createdAt).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </Typography>
-            </Paper>
-          </Box>
-        ))}
+              <div className="message-content">
+                <div className="message-bubble">
+                  {msg.text}
+                  <div className="timestamp">
+                    {new Date(msg.createdAt).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
         <div ref={messagesEndRef} />
-      </Box>
+      </div>
 
-      <Stack direction="row" spacing={1}>
-        <TextField
-          fullWidth
+      <div className="chatbox-input">
+        <button
+          className="emoji-toggle"
+          onClick={() => setShowEmoji((prev) => !prev)}
+        >
+          <BsEmojiSmile size={20} />
+        </button>
+
+        {showEmoji && (
+          <div ref={emojiPickerRef} className="emoji-picker-wrapper">
+            <EmojiPicker onEmojiClick={handleEmojiClick} />
+          </div>
+        )}
+
+        <input
+          type="text"
+          placeholder="Type your message..."
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Type your message..."
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
-        <IconButton color="primary" onClick={handleSend}>
-          <SendIcon />
-        </IconButton>
-      </Stack>
-    </Box>
+        <button onClick={handleSend}>Send</button>
+      </div>
+    </div>
   );
 };
 
