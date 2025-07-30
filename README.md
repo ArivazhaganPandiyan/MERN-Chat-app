@@ -33,38 +33,17 @@
 - JSON Web Token (JWT)
 - Socket.IO for real-time messaging
 
----
+🌐 Live URLs
+🔗 GitHub Repo: https://github.com/ArivazhaganPandiyan/MERN-Chat-app.git
 
-## 📂 Folder Structure
+🚀 Backend (Render): https://mern-chat-app-a1xe.onrender.com
 
-Quick-Talk/
-├── backend/
-│ ├── controllers/
-│ ├── models/
-│ ├── routes/
-│ ├── middleware/
-│ ├── utils/
-│ └── server.js
-├── frontend/
-│ ├── src/
-│ │ ├── components/
-│ │ ├── pages/
-│ │ ├── styles/
-│ │ ├── App.jsx
-│ │ └── main.jsx
-├── .env
-├── README.md
-
-
-
-
----
+🌍 Frontend (Netlify): https://mern-chat-app-a1xe.netlify.com
 
 ## ⚙️ Setup Instructions
 
 ### 1. Clone the repository
 
-```bash
 git clone https://github.com/your-username/quick-talk.git
 cd quick-talk
 git clone https://github.com/your-username/quick-talk.git
@@ -87,35 +66,15 @@ cd ../frontend
 npm install
 
 Update the base URL in Axios to point to your backend (Render/localhost):
-// example in axios.js or inside fetch calls
-baseURL: "https://your-backend-url.com/api"
+ example in axios.js or inside fetch calls baseURL: "https://your-backend-url.com/api"
+
 Start the frontend:npm run dev
 for development : npm run build
 
 🌐 Deployment
 Backend (Render)
-Push your backend to GitHub
-
-Go to Render
-
-Create a new Web Service → connect to GitHub
-
-Set environment variables (same as .env)
-
-Deploy
-
 Frontend (Netlify)
-Push your frontend to GitHub
 
-Go to Netlify
-
-Create a new site → import from GitHub
-
-Set the build command: npm run build
-
-Set the publish directory: dist
-
-Update API URLs in code to match your Render backend
 
 🧪 Future Enhancements
 ✅ Seen/read message indicators
